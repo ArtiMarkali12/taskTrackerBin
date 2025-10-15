@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const adminSchema = new mongoose.Schema({
   // Reference to the main User document
-  user: {
+  user_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User", // This links to userModel.js
     required: true,
@@ -28,9 +28,7 @@ const adminSchema = new mongoose.Schema({
       "manage_tasks"
     ],
   },
-  contactNumber: {
-    type: String,
-  },
+  
   
   managedTeachers: [
     {

@@ -1,20 +1,53 @@
-// backend/models/userModel.js
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
+const userSchema = new mongoose.Schema(
+  {
+    fullname: {
+      firstname: { type: String, required: true, trim: true },
+      middlename: { type: String, trim: true },
+      lastname: { type: String, required: true, trim: true },
+    },
 
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      trim: true,
+    },
 
+    password: {
+      type: String,
+      required: true,
+    },
 
-const userSchema = new mongoose.Schema({
-  name: { type: String, required: true },  
-  email: { type: String, required: true, unique: true },
-  username: { type: String, unique: true }, // this attribute is cancelled
-  password: { type: String, required: true },
-  role: { type: String, enum: ["admin", "teacher", "student"], default: "student" }
-}, { timestamps: true });
+    contactNumber: {
+    type: String,
+  },
+    role: {
+      type: String,
+      enum: ["admin", "teacher", "student"],
+      default: "student",
+    },
 
-// Hash password before saving
+    // Optional suggestion: You can store a profile photo or ID reference later
+    profilePic: {
+      type: String, // store URL or image path
+    },
+
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
+  },
+  { timestamps: true }
+);
+
+//
+// 🔐 Hash password before saving
+//
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
   const salt = await bcrypt.genSalt(10);
@@ -22,7 +55,9 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-// Compare password
+//
+// 🔑 Compare entered password
+//
 userSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
@@ -31,6 +66,7 @@ userSchema.methods.getFullName = function () {
   const { firstname, middlename, lastname } = this.fullname;
   return [firstname, middlename, lastname].filter(Boolean).join(" ");
 };
+
 
 
 userSchema.methods.generateJWT = function () {
