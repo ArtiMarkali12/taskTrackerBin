@@ -1,26 +1,9 @@
-// backend/routes/userRoutes.js
 const express = require("express");
 const router = express.Router();
-const {
-  registerUser,
-  loginUser,
-  createStudent,
-  getAllUsers
-} = require("../controllers/user.Controller");
-const { protect, isAdmin } = require("../middleware/auth.middleware");
+const userController = require("../controllers/user.Controller");
 
-// Open register route (use it once to create first admin)
-// POST /api/users/register
-router.post("/register", registerUser);
-
-// POST /api/users/login
-router.post("/login", loginUser);
-
-// Admin-only create student
-// POST /api/users/create-student
-router.post("/create-student", protect, isAdmin, createStudent);
-
-// GET /api/users (admin only)
-router.get("/", protect, isAdmin, getAllUsers);
+router.post("/register", userController.registerUser);
+router.post("/login", userController.loginUser);
+router.get("/all", userController.getAllUsers);
 
 module.exports = router;

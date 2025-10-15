@@ -56,7 +56,7 @@ const studentSchema = new mongoose.Schema(
       ref: "User",
     },
   },
-  { timestamps: true, collection: "students" } // ⬅ Explicitly name the collection
+  { timestamps: true, collection: "students" } // ensures separate "students" collection
 );
 
 module.exports = mongoose.model("Student", studentSchema);
