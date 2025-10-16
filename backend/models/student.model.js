@@ -16,26 +16,21 @@ const studentSchema = new mongoose.Schema(
       trim: true,
     },
 
-    department: {
+    course: {
       type: String,
       required: true,
     },
 
-    className: {
+    batch: {
       type: String,
-      required: true,
+      default: "demo batch",
     },
 
-    year: {
-      type: String,
-      enum: ["First Year", "Second Year", "Third Year", "Final Year"],
-      default: "First Year",
-    },
-
-    assignedTeacher: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-    },
+  assignedTeachers: [{
+    type: mongoose.Schema.Types.ObjectId,
+    
+    ref: "User",
+  }],
 
     subjects: [
       {
@@ -44,17 +39,12 @@ const studentSchema = new mongoose.Schema(
       },
     ],
 
-    tasksAssigned: [
+    tasksCompleted: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Task",
       },
     ],
-
-    createdByAdmin: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-    },
   },
   { timestamps: true, collection: "students" } // ensures separate "students" collection
 );

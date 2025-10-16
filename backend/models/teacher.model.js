@@ -45,12 +45,6 @@ const teacherSchema = new mongoose.Schema(
         ref: "Student", // connects to Student collection
       },
     ],
-
-    // 🧑‍💼 Admin who created this teacher profile
-    createdByAdmin: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User", // Admin reference
-    },
   },
   {
     timestamps: true,
