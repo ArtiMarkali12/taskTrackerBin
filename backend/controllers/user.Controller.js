@@ -1,6 +1,7 @@
 // backend/controllers/user.controller.js
 const adminModel = require("../models/admin.model");
 const studentModel = require("../models/student.model");
+const teacherModel = require("../models/teacher.model"); // ✅ Added
 const userService = require("../services/user.service");
 const jwt = require("jsonwebtoken");
 
@@ -22,7 +23,7 @@ exports.registerUser = async (req, res) => {
       year,
     } = req.body;
 
-    // Create base user
+    // 🧩 Create base user
     const user = await userService.registerUser({
       firstname,
       middlename,
@@ -62,13 +63,24 @@ exports.registerUser = async (req, res) => {
       });
     }
 
-    // JWT Token generation
+    // 🧩 If Teacher → create Teacher profile
+    if (user.role === "teacher") {
+      profile = await teacherModel.create({
+        user_id: user._id,
+        department: department || "Computer Science",
+        designation: "Assistant Professor",
+        subjectsTaught: [],
+      });
+    }
+
+    // 🪙 Generate JWT token
     const token = jwt.sign(
       { id: user._id, role: user.role },
       process.env.JWT_SECRET || "defaultSecretKey",
       { expiresIn: "30d" }
     );
 
+    // ✅ Response
     res.status(201).json({
       message: "✅ User registered successfully",
       user: {
